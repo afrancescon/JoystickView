@@ -145,35 +145,54 @@ public class JoystickView extends View implements Runnable {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		xPosition = (int) event.getX();
-		yPosition = (int) event.getY();
-		double abs = Math.sqrt((xPosition - centerX) * (xPosition - centerX)
-				+ (yPosition - centerY) * (yPosition - centerY));
-		if (abs > joystickRadius) {
-			xPosition = (int) ((xPosition - centerX) * joystickRadius / abs + centerX);
-			yPosition = (int) ((yPosition - centerY) * joystickRadius / abs + centerY);
-		}
-		invalidate();
-		if (event.getAction() == MotionEvent.ACTION_UP) {
-			xPosition = (int) centerX;
-			yPosition = (int) centerY;
-			thread.interrupt();
-			if (onJoystickMoveListener != null)
-				onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
-						getDirection());
-		}
-		if (onJoystickMoveListener != null
-				&& event.getAction() == MotionEvent.ACTION_DOWN) {
-			if (thread != null && thread.isAlive()) {
-				thread.interrupt();
+		
+		if (isEnabled()) {
+		
+			xPosition = (int) event.getX();
+			yPosition = (int) event.getY();
+			double abs = Math.sqrt((xPosition - centerX) * (xPosition - centerX)
+					+ (yPosition - centerY) * (yPosition - centerY));
+			if (abs > joystickRadius) {
+				xPosition = (int) ((xPosition - centerX) * joystickRadius / abs + centerX);
+				yPosition = (int) ((yPosition - centerY) * joystickRadius / abs + centerY);
 			}
-			thread = new Thread(this);
-			thread.start();
-			if (onJoystickMoveListener != null)
-				onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
-						getDirection());
+			invalidate();
+			if (event.getAction() == MotionEvent.ACTION_UP) {
+				xPosition = (int) centerX;
+				yPosition = (int) centerY;
+				thread.interrupt();
+				if (onJoystickMoveListener != null)
+					onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
+							getDirection());
+			}
+			if (onJoystickMoveListener != null
+					&& event.getAction() == MotionEvent.ACTION_DOWN) {
+				if (thread != null && thread.isAlive()) {
+					thread.interrupt();
+				}
+				thread = new Thread(this);
+				thread.start();
+				if (onJoystickMoveListener != null)
+					onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
+							getDirection());
+			}
+		
 		}
+		
 		return true;
+	}
+	
+	@Override
+	public void setEnabled(boolean enabled) {
+		
+		super.setEnabled(enabled);
+		
+		if (enabled) {
+			button.setColor(Color.RED);
+		} else {
+			button.setColor(Color.DKGRAY);
+		}
+		
 	}
 
 	private int getAngle() {
