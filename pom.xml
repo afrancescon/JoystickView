@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.zerokol</groupId>
 	<artifactId>joystick-view</artifactId>
-	<version>2.0</version>
+	<version>2.1-SNAPSHOT</version>
 	<packaging>aar</packaging>
 	<name>Joystick View</name>
 	<description>Android JoystickView is a Custom View that simulates a Joystick for interactive applications for Android, as simple aim is allows access values ​​of angle and power of the virtual Joystck movement.</description>
